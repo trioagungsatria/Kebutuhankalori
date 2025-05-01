@@ -73,23 +73,22 @@ def get_food_recommendations(age, gender, activity_level, weight):
 if page == "Rekomendasi Makanan":
     st.title("Rekomendasi Makanan Berdasarkan Aktivitas & Usia")
 
-    # Kotak input biru transparan
+    # Input dalam 1 kotak biru
     st.markdown("""
-    <div style="background-color: rgba(0, 102, 204, 0.15); padding: 20px; border-radius: 10px; color: black;">
-    <h4>Masukkan Data Anda:</h4>
+    <div style="background-color: rgba(0, 102, 204, 0.15); padding: 25px; border-radius: 10px; color: black;">
     """, unsafe_allow_html=True)
 
-    age = st.number_input("Umur Anda (tahun)", min_value=1, max_value=100, key="age_input")
-    weight = st.number_input("Berat Badan Anda (kg)", min_value=1.0, max_value=200.0, step=0.1, key="weight_input")
-    gender = st.selectbox("Pilih jenis kelamin", ["Pria", "Wanita"], key="gender_input")
-    activity_level = st.selectbox("Tingkat aktivitas fisik Anda", ["Rendah", "Sedang", "Tinggi"], key="activity_input")
+    st.subheader("Masukkan Data Anda")
+    age = st.number_input("Umur Anda (tahun)", min_value=1, max_value=100)
+    weight = st.number_input("Berat Badan Anda (kg)", min_value=1.0, max_value=200.0, step=0.1)
+    gender = st.selectbox("Pilih jenis kelamin", ["Pria", "Wanita"])
+    activity_level = st.selectbox("Tingkat aktivitas fisik Anda", ["Rendah", "Sedang", "Tinggi"])
 
     st.markdown("</div>", unsafe_allow_html=True)
 
     if st.button("Tampilkan Rekomendasi"):
         good_foods, avoid_foods = get_food_recommendations(age, gender, activity_level, weight)
 
-        # Rekomendasi makanan
         st.subheader(f"✅ Makanan yang Direkomendasikan (Total: {len(good_foods)} jenis):")
         total_recommended_grams = sum(good_foods.values())
         recommended_html = "".join([f"- {food}: <b>{gram} gram</b><br>" for food, gram in good_foods.items()])
@@ -103,7 +102,6 @@ if page == "Rekomendasi Makanan":
             """, unsafe_allow_html=True
         )
 
-        # Makanan yang dihindari
         st.subheader(f"🚫 Makanan yang Sebaiknya Dihindari (Total: {len(avoid_foods)} jenis):")
         total_avoid_grams = sum(avoid_foods.values())
         avoid_html = "".join([f"- {food}: <b>{gram} gram</b><br>" for food, gram in avoid_foods.items()])
@@ -129,6 +127,7 @@ elif page == "Tentang Aplikasi":
 
     💡 Dibuat dengan Streamlit oleh [Tim Anda]
     """)
+
 
 
 
