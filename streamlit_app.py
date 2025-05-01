@@ -10,7 +10,7 @@ def get_food_recommendations(age, gender, activity_level, weight):
     recommended = {}
     to_avoid = {}
 
-    adjustment_factor = weight / 60.0  # berat badan standar 60 kg
+    adjustment_factor = weight / 60.0  # berat badan standar
 
     if age < 18:
         recommended.update({
@@ -73,23 +73,29 @@ def get_food_recommendations(age, gender, activity_level, weight):
 if page == "Rekomendasi Makanan":
     st.title("Rekomendasi Makanan Berdasarkan Aktivitas & Usia")
 
-    # Input dalam 1 kotak biru
-    st.markdown("""
-    <div style="background-color: rgba(0, 102, 204, 0.15); padding: 25px; border-radius: 10px; color: black;">
-    """, unsafe_allow_html=True)
+    st.markdown("### Masukkan Data Anda")
 
-    st.subheader("Masukkan Data Anda")
-    age = st.number_input("Umur Anda (tahun)", min_value=1, max_value=100)
-    weight = st.number_input("Berat Badan Anda (kg)", min_value=1.0, max_value=200.0, step=0.1)
-    gender = st.selectbox("Pilih jenis kelamin", ["Pria", "Wanita"])
-    activity_level = st.selectbox("Tingkat aktivitas fisik Anda", ["Rendah", "Sedang", "Tinggi"])
+    # Kotak biru individual untuk setiap input
+    st.markdown('<div style="background-color: rgba(0, 102, 204, 0.2); padding:10px; border-radius:10px;">', unsafe_allow_html=True)
+    age = st.number_input("Umur Anda (tahun)", min_value=1, max_value=100, key="age")
+    st.markdown("</div>", unsafe_allow_html=True)
 
+    st.markdown('<div style="background-color: rgba(0, 102, 204, 0.2); padding:10px; border-radius:10px;">', unsafe_allow_html=True)
+    weight = st.number_input("Berat Badan Anda (kg)", min_value=1.0, max_value=200.0, step=0.1, key="weight")
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    st.markdown('<div style="background-color: rgba(0, 102, 204, 0.2); padding:10px; border-radius:10px;">', unsafe_allow_html=True)
+    gender = st.selectbox("Pilih jenis kelamin", ["Pria", "Wanita"], key="gender")
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    st.markdown('<div style="background-color: rgba(0, 102, 204, 0.2); padding:10px; border-radius:10px;">', unsafe_allow_html=True)
+    activity_level = st.selectbox("Tingkat aktivitas fisik Anda", ["Rendah", "Sedang", "Tinggi"], key="activity")
     st.markdown("</div>", unsafe_allow_html=True)
 
     if st.button("Tampilkan Rekomendasi"):
         good_foods, avoid_foods = get_food_recommendations(age, gender, activity_level, weight)
 
-        st.subheader(f"✅ Makanan yang Direkomendasikan (Total: {len(good_foods)} jenis):")
+        st.subheader("✅ Makanan yang Direkomendasikan:")
         total_recommended_grams = sum(good_foods.values())
         recommended_html = "".join([f"- {food}: <b>{gram} gram</b><br>" for food, gram in good_foods.items()])
         recommended_html += f"<br><b>Total konsumsi yang disarankan: {total_recommended_grams} gram/ml</b>"
@@ -102,7 +108,7 @@ if page == "Rekomendasi Makanan":
             """, unsafe_allow_html=True
         )
 
-        st.subheader(f"🚫 Makanan yang Sebaiknya Dihindari (Total: {len(avoid_foods)} jenis):")
+        st.subheader("🚫 Makanan yang Sebaiknya Dihindari:")
         total_avoid_grams = sum(avoid_foods.values())
         avoid_html = "".join([f"- {food}: <b>{gram} gram</b><br>" for food, gram in avoid_foods.items()])
         avoid_html += f"<br><b>Total konsumsi yang perlu dibatasi: {total_avoid_grams} gram/ml</b>"
@@ -127,6 +133,7 @@ elif page == "Tentang Aplikasi":
 
     💡 Dibuat dengan Streamlit oleh [Tim Anda]
     """)
+
 
 
 
