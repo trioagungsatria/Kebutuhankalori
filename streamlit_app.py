@@ -1,5 +1,7 @@
 import streamlit as st
 
+st.set_page_config(page_title="Rekomendasi Makanan", page_icon="🍧", layout="centered")
+
 # Sidebar untuk navigasi antar slide
 page = st.sidebar.selectbox("Pilih Halaman", ["Rekomendasi Makanan", "Tentang Aplikasi"])
 
