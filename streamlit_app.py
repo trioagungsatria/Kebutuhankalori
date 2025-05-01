@@ -4,6 +4,7 @@ import streamlit as st
 page = st.sidebar.selectbox("Pilih Halaman", ["Rekomendasi Makanan", "Tentang Aplikasi"])
 
 # Slide: Rekomendasi Makanan (kode asli kamu)
+
 if page == "Rekomendasi Makanan":
     # Judul aplikasi
     st.title("Rekomendasi Makanan Berdasarkan Aktivitas & Usia")
