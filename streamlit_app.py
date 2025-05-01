@@ -2,21 +2,19 @@ import streamlit as st
 
 st.set_page_config(page_title="Rekomendasi Makanan", page_icon="🍧", layout="centered")
 
-# Sidebar untuk navigasi antar slide
+# Sidebar
 page = st.sidebar.selectbox("Pilih Halaman", ["Rekomendasi Makanan", "Tentang Aplikasi"])
 
-# Slide: Rekomendasi Makanan (kode asli kamu)
-
+# Halaman Rekomendasi Makanan
 if page == "Rekomendasi Makanan":
-    # Judul aplikasi
     st.title("Rekomendasi Makanan Berdasarkan Aktivitas & Usia")
 
-    # Input pengguna
+    # Input
     age = st.number_input("Masukkan umur Anda (tahun)", min_value=1, max_value=100)
     gender = st.selectbox("Pilih jenis kelamin", ["Pria", "Wanita"])
     activity_level = st.selectbox("Tingkat aktivitas fisik Anda", ["Rendah", "Sedang", "Tinggi"])
 
-    # Fungsi untuk menentukan makanan berdasarkan input
+    # Fungsi rekomendasi
     def get_food_recommendations(age, gender, activity_level):
         recommended = {}
         to_avoid = {}
@@ -43,7 +41,7 @@ if page == "Rekomendasi Makanan":
                 "Makanan olahan": 180,
                 "Terlalu banyak kafein": 200
             })
-        else:  # usia di atas 50
+        else:
             recommended.update({
                 "Makanan tinggi kalsium": 250,
                 "Ikan berlemak (salmon, sarden)": 150,
@@ -70,52 +68,56 @@ if page == "Rekomendasi Makanan":
 
         return recommended, to_avoid
 
-    # Tampilkan rekomendasi saat tombol ditekanif st.button("Tampilkan Rekomendasi"):
-if st.button("Tampilkan Rekomendasi"):
-    good_foods, avoid_foods = get_food_recommendations(age, gender, activity_level)
+    # Tombol tampilkan
+    if st.button("Tampilkan Rekomendasi"):
+        good_foods, avoid_foods = get_food_recommendations(age, gender, activity_level)
 
-    # Makanan yang direkomendasikan
-    st.subheader(f"✅ Makanan yang Direkomendasikan (Total: {len(good_foods)} jenis):")
-    total_recommended_grams = 0
-    recommended_text = ""
-    for food, gram in good_foods.items():
-        recommended_text += f"- {food}: <b>{gram} gram</b><br>"
-        total_recommended_grams += gram
-    recommended_text += f"<br><b>Total konsumsi yang disarankan: {total_recommended_grams} gram/ml</b>"
-st.markdown(
-    f"""
-    <div style="background-color: rgba(179, 0, 0, 0.6); padding: 15px; border-radius: 10px; color: white;">
-        {recommended_text}
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+        st.subheader(f"✅ Makanan yang Direkomendasikan (Total: {len(good_foods)} jenis):")
+        total_recommended_grams = 0
+        recommended_text = ""
+        for food, gram in good_foods.items():
+            recommended_text += f"- {food}: <b>{gram} gram</b><br>"
+            total_recommended_grams += gram
+        recommended_text += f"<br><b>Total konsumsi yang disarankan: {total_recommended_grams} gram/ml</b>"
 
-...
+        st.markdown(
+            f"""
+            <div style="background-color: rgba(179, 0, 0, 0.5); padding: 15px; border-radius: 10px; color: white;">
+                {recommended_text}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
-st.markdown(
-    f"""
-    <div style="background-color: rgba(204, 0, 0, 0.6); padding: 15px; border-radius: 10px; color: white;">
-        {avoid_text}
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+        st.subheader(f"🚫 Makanan yang Sebaiknya Dihindari (Total: {len(avoid_foods)} jenis):")
+        total_avoid_grams = 0
+        avoid_text = ""
+        for food, gram in avoid_foods.items():
+            avoid_text += f"- {food}: <b>{gram} gram</b><br>"
+            total_avoid_grams += gram
+        avoid_text += f"<br><b>Total konsumsi yang perlu dibatasi: {total_avoid_grams} gram/ml</b>"
 
+        st.markdown(
+            f"""
+            <div style="background-color: rgba(204, 0, 0, 0.5); padding: 15px; border-radius: 10px; color: white;">
+                {avoid_text}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
-
-
-# Slide: Tentang Aplikasi
+# Halaman Tentang
 elif page == "Tentang Aplikasi":
     st.title("Tentang Aplikasi")
     st.markdown("""
     Aplikasi **Rekomendasi Makanan Berdasarkan Aktivitas & Usia** dibuat untuk memberikan panduan sederhana mengenai pola makan sehat berdasarkan kondisi individu.
-    
+
     - Menggunakan data usia dan aktivitas untuk menentukan saran gizi
     - Rekomendasi bersifat umum dan bukan pengganti nasihat medis
-    
+
     💡 Dibuat dengan Streamlit oleh [Tim Anda]
     """)
+
     
 
 
