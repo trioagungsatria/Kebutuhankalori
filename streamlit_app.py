@@ -2,87 +2,98 @@ import streamlit as st
 
 st.set_page_config(page_title="Rekomendasi Makanan", page_icon="🍧", layout="centered")
 
-# Sidebar
+# Sidebar navigasi
 page = st.sidebar.selectbox("Pilih Halaman", ["Rekomendasi Makanan", "Tentang Aplikasi"])
 
-# Halaman Rekomendasi
+# Fungsi rekomendasi
+def get_food_recommendations(age, gender, activity_level, weight):
+    recommended = {}
+    to_avoid = {}
+
+    adjustment_factor = weight / 60.0  # 60 kg sebagai patokan
+
+    if age < 18:
+        recommended.update({
+            "Susu rendah lemak": 250,
+            "Sayuran hijau": 100,
+            "Protein hewani dan nabati": 150
+        })
+        to_avoid.update({
+            "Makanan cepat saji": 200,
+            "Minuman bersoda": 330,
+            "Makanan tinggi gula": 100
+        })
+    elif 18 <= age <= 50:
+        recommended.update({
+            "Karbohidrat kompleks (nasi merah, oatmeal)": 200,
+            "Sayuran & buah segar": 300,
+            "Protein (telur, ayam, tahu)": 200
+        })
+        to_avoid.update({
+            "Gorengan": 150,
+            "Makanan olahan": 180,
+            "Terlalu banyak kafein": 200
+        })
+    else:
+        recommended.update({
+            "Makanan tinggi kalsium": 250,
+            "Ikan berlemak (salmon, sarden)": 150,
+            "Sayur berserat tinggi": 200
+        })
+        to_avoid.update({
+            "Makanan asin": 150,
+            "Daging merah berlebihan": 200,
+            "Gula tinggi": 100
+        })
+
+    if activity_level == "Tinggi":
+        recommended.update({
+            "Karbohidrat sehat (ubi, roti gandum)": 250,
+            "Pisang": 120,
+            "Air mineral yang cukup": 2000
+        })
+    elif activity_level == "Rendah":
+        to_avoid.update({
+            "Camilan manis": 100,
+            "Minuman manis": 250,
+            "Lemak jenuh": 70
+        })
+
+    # Penyesuaian berdasarkan berat badan
+    for food in recommended:
+        recommended[food] = int(recommended[food] * adjustment_factor)
+
+    for food in to_avoid:
+        adjusted = to_avoid[food] * adjustment_factor
+        max_limit = to_avoid[food] * 1.3  # Maksimum naik 30%
+        to_avoid[food] = int(min(adjusted, max_limit))
+
+    return recommended, to_avoid
+
+# Halaman rekomendasi
 if page == "Rekomendasi Makanan":
     st.title("Rekomendasi Makanan Berdasarkan Aktivitas & Usia")
 
-    # Input pengguna
-    age = st.number_input("Umur Anda (tahun)", min_value=1, max_value=100)
-    weight = st.number_input("Berat Badan Anda (kg)", min_value=1.0, max_value=200.0, step=0.1)
-    gender = st.selectbox("Pilih jenis kelamin", ["Pria", "Wanita"])
-    activity_level = st.selectbox("Tingkat aktivitas fisik Anda", ["Rendah", "Sedang", "Tinggi"])
+    # Bagian input dengan background biru
+    with st.container():
+        st.markdown("""
+        <div style="background-color: rgba(0, 102, 204, 0.15); padding: 20px; border-radius: 10px;">
+        <h4 style="color: black;">Silakan isi data berikut:</h4>
+        </div>
+        """, unsafe_allow_html=True)
 
-    # Fungsi rekomendasi
-    def get_food_recommendations(age, gender, activity_level, weight):
-        recommended = {}
-        to_avoid = {}
-
-        adjustment_factor = weight / 60.0  # 60 kg sebagai patokan
-
-        if age < 18:
-            recommended.update({
-                "Susu rendah lemak": 250,
-                "Sayuran hijau": 100,
-                "Protein hewani dan nabati": 150
-            })
-            to_avoid.update({
-                "Makanan cepat saji": 200,
-                "Minuman bersoda": 330,
-                "Makanan tinggi gula": 100
-            })
-        elif 18 <= age <= 50:
-            recommended.update({
-                "Karbohidrat kompleks (nasi merah, oatmeal)": 200,
-                "Sayuran & buah segar": 300,
-                "Protein (telur, ayam, tahu)": 200
-            })
-            to_avoid.update({
-                "Gorengan": 150,
-                "Makanan olahan": 180,
-                "Terlalu banyak kafein": 200
-            })
-        else:
-            recommended.update({
-                "Makanan tinggi kalsium": 250,
-                "Ikan berlemak (salmon, sarden)": 150,
-                "Sayur berserat tinggi": 200
-            })
-            to_avoid.update({
-                "Makanan asin": 150,
-                "Daging merah berlebihan": 200,
-                "Gula tinggi": 100
-            })
-
-        if activity_level == "Tinggi":
-            recommended.update({
-                "Karbohidrat sehat (ubi, roti gandum)": 250,
-                "Pisang": 120,
-                "Air mineral yang cukup": 2000
-            })
-        elif activity_level == "Rendah":
-            to_avoid.update({
-                "Camilan manis": 100,
-                "Minuman manis": 250,
-                "Lemak jenuh": 70
-            })
-
-        # Penyesuaian berdasarkan berat badan
-        for food in recommended:
-            recommended[food] = int(recommended[food] * adjustment_factor)
-
-        for food in to_avoid:
-            adjusted = to_avoid[food] * adjustment_factor
-            max_limit = to_avoid[food] * 1.3  # Batas maksimal naik 30%
-            to_avoid[food] = int(min(adjusted, max_limit))
-
-        return recommended, to_avoid
+        col1, col2 = st.columns(2)
+        with col1:
+            age = st.number_input("Umur Anda (tahun)", min_value=1, max_value=100)
+            weight = st.number_input("Berat Badan Anda (kg)", min_value=1.0, max_value=200.0, step=0.1)
+        with col2:
+            gender = st.selectbox("Pilih jenis kelamin", ["Pria", "Wanita"])
+            activity_level = st.selectbox("Tingkat aktivitas fisik Anda", ["Rendah", "Sedang", "Tinggi"])
 
     if st.button("Tampilkan Rekomendasi"):
         good_foods, avoid_foods = get_food_recommendations(age, gender, activity_level, weight)
 
+        # Rekomendasi makanan
         st.subheader(f"✅ Makanan yang Direkomendasikan (Total: {len(good_foods)} jenis):")
         total_recommended_grams = 0
         recommended_text = ""
@@ -93,13 +104,14 @@ if page == "Rekomendasi Makanan":
 
         st.markdown(
             f"""
-            <div style="background-color: rgba(200, 0, 0, 0.3); padding: 15px; border-radius: 10px; color: white;">
+            <div style="background-color: rgba(200, 0, 0, 0.4); padding: 15px; border-radius: 10px; color: white;">
                 {recommended_text}
             </div>
             """,
             unsafe_allow_html=True
         )
 
+        # Makanan yang dihindari
         st.subheader(f"🚫 Makanan yang Sebaiknya Dihindari (Total: {len(avoid_foods)} jenis):")
         total_avoid_grams = 0
         avoid_text = ""
@@ -110,14 +122,14 @@ if page == "Rekomendasi Makanan":
 
         st.markdown(
             f"""
-            <div style="background-color: rgba(180, 0, 0, 0.3); padding: 15px; border-radius: 10px; color: white;">
+            <div style="background-color: rgba(180, 0, 0, 0.4); padding: 15px; border-radius: 10px; color: white;">
                 {avoid_text}
             </div>
             """,
             unsafe_allow_html=True
         )
 
-# Halaman Tentang
+# Halaman tentang
 elif page == "Tentang Aplikasi":
     st.title("Tentang Aplikasi")
     st.markdown("""
@@ -128,6 +140,7 @@ elif page == "Tentang Aplikasi":
 
     💡 Dibuat dengan Streamlit oleh [Tim Anda]
     """)
+
 
 
 
