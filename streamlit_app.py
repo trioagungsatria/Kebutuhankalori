@@ -2,7 +2,6 @@ import streamlit as st
 
 st.set_page_config(page_title="Rekomendasi Makanan", page_icon="🍧", layout="centered")
 
-# Sidebar navigasi
 page = st.sidebar.selectbox("Pilih Halaman", ["Rekomendasi Makanan", "Tentang Aplikasi"])
 
 # Fungsi rekomendasi
@@ -10,7 +9,7 @@ def get_food_recommendations(age, gender, activity_level, weight):
     recommended = {}
     to_avoid = {}
 
-    adjustment_factor = weight / 60.0  # 60 kg sebagai patokan
+    adjustment_factor = weight / 60.0  # patokan berat badan 60 kg
 
     if age < 18:
         recommended.update({
@@ -59,36 +58,52 @@ def get_food_recommendations(age, gender, activity_level, weight):
             "Lemak jenuh": 70
         })
 
-    # Penyesuaian berdasarkan berat badan
+    # Penyesuaian berat badan
     for food in recommended:
         recommended[food] = int(recommended[food] * adjustment_factor)
 
     for food in to_avoid:
         adjusted = to_avoid[food] * adjustment_factor
-        max_limit = to_avoid[food] * 1.3  # Maksimum naik 30%
+        max_limit = to_avoid[food] * 1.3
         to_avoid[food] = int(min(adjusted, max_limit))
 
     return recommended, to_avoid
 
-# Halaman rekomendasi
+# Halaman utama
 if page == "Rekomendasi Makanan":
     st.title("Rekomendasi Makanan Berdasarkan Aktivitas & Usia")
 
-    # Bagian input dengan background biru
-    with st.container():
+    col1, col2 = st.columns(2)
+
+    with col1:
         st.markdown("""
-        <div style="background-color: rgba(0, 102, 204, 0.15); padding: 20px; border-radius: 10px;">
-        <h4 style="color: black;">Silakan isi data berikut:</h4>
+        <div style="background-color: rgba(0, 102, 204, 0.25); padding: 8px 12px; border-radius: 8px; color: black;">
+            <b>Umur Anda (tahun)</b>
         </div>
         """, unsafe_allow_html=True)
+        age = st.number_input("", min_value=1, max_value=100, key="age_input")
 
-        col1, col2 = st.columns(2)
-        with col1:
-            age = st.number_input("Umur Anda (tahun)", min_value=1, max_value=100)
-            weight = st.number_input("Berat Badan Anda (kg)", min_value=1.0, max_value=200.0, step=0.1)
-        with col2:
-            gender = st.selectbox("Pilih jenis kelamin", ["Pria", "Wanita"])
-            activity_level = st.selectbox("Tingkat aktivitas fisik Anda", ["Rendah", "Sedang", "Tinggi"])
+        st.markdown("""
+        <div style="background-color: rgba(0, 102, 204, 0.25); padding: 8px 12px; border-radius: 8px; color: black;">
+            <b>Berat Badan Anda (kg)</b>
+        </div>
+        """, unsafe_allow_html=True)
+        weight = st.number_input("", min_value=1.0, max_value=200.0, step=0.1, key="weight_input")
+
+    with col2:
+        st.markdown("""
+        <div style="background-color: rgba(0, 102, 204, 0.25); padding: 8px 12px; border-radius: 8px; color: black;">
+            <b>Pilih jenis kelamin</b>
+        </div>
+        """, unsafe_allow_html=True)
+        gender = st.selectbox("", ["Pria", "Wanita"], key="gender_input")
+
+        st.markdown("""
+        <div style="background-color: rgba(0, 102, 204, 0.25); padding: 8px 12px; border-radius: 8px; color: black;">
+            <b>Tingkat aktivitas fisik Anda</b>
+        </div>
+        """, unsafe_allow_html=True)
+        activity_level = st.selectbox("", ["Rendah", "Sedang", "Tinggi"], key="activity_input")
 
     if st.button("Tampilkan Rekomendasi"):
         good_foods, avoid_foods = get_food_recommendations(age, gender, activity_level, weight)
@@ -140,6 +155,7 @@ elif page == "Tentang Aplikasi":
 
     💡 Dibuat dengan Streamlit oleh [Tim Anda]
     """)
+
 
 
 
