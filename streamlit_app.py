@@ -71,38 +71,34 @@ if page == "Rekomendasi Makanan":
         return recommended, to_avoid
 
     # Tampilkan rekomendasi saat tombol ditekan
-    # Tampilkan rekomendasi saat tombol ditekan
     if st.button("Tampilkan Rekomendasi"):
         good_foods, avoid_foods = get_food_recommendations(age, gender, activity_level)
 
-        # Kotak untuk makanan direkomendasikan
-        st.markdown("""
-        <div style="background-color: #f0f2f6; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-        """, unsafe_allow_html=True)
-
+        # Makanan yang direkomendasikan
         st.subheader(f"✅ Makanan yang Direkomendasikan (Total: {len(good_foods)} jenis):")
         total_recommended_grams = 0
         for food, gram in good_foods.items():
-            st.markdown(f"- {food}: **{gram} gram**")
+            st.markdown(
+                f"""<div style="background-color: #e6f7ff; padding: 6px 10px; border-radius: 5px; margin-bottom: 5px;">
+                {food}: <b>{gram} gram</b>
+                </div>""",
+                unsafe_allow_html=True
+            )
             total_recommended_grams += gram
         st.markdown(f"**Total konsumsi yang disarankan: {total_recommended_grams} gram/ml**")
 
-        st.markdown("</div>", unsafe_allow_html=True)
-
-        # Kotak untuk makanan yang perlu dihindari
-        st.markdown("""
-        <div style="background-color: #fff0f0; padding: 20px; border-radius: 10px;">
-        """, unsafe_allow_html=True)
-
+        # Makanan yang sebaiknya dihindari
         st.subheader(f"🚫 Makanan yang Sebaiknya Dihindari (Total: {len(avoid_foods)} jenis):")
         total_avoid_grams = 0
         for food, gram in avoid_foods.items():
-            st.markdown(f"- {food}: **{gram} gram**")
+            st.markdown(
+                f"""<div style="background-color: #fff2e6; padding: 6px 10px; border-radius: 5px; margin-bottom: 5px;">
+                {food}: <b>{gram} gram</b>
+                </div>""",
+                unsafe_allow_html=True
+            )
             total_avoid_grams += gram
         st.markdown(f"**Total konsumsi yang perlu dibatasi: {total_avoid_grams} gram/ml**")
-
-        st.markdown("</div>", unsafe_allow_html=True)
-
 
 # Slide: Tentang Aplikasi
 elif page == "Tentang Aplikasi":
