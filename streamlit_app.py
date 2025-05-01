@@ -100,7 +100,7 @@ if page == "Rekomendasi Makanan":
     if st.button("Tampilkan Rekomendasi"):
         good_foods, avoid_foods = get_food_recommendations(age, gender, activity_level, weight)
 
-        st.subheader("✅ Makanan yang Direkomendasikan:")
+        st.subheader("✔❤ Makanan yang Direkomendasikan:")
         total_recommended_grams = sum(good_foods.values())
         recommended_html = "".join([f"- {food}: <b>{gram} gram</b><br>" for food, gram in good_foods.items()])
         recommended_html += f"<br><b>Total konsumsi yang disarankan: {total_recommended_grams} gram/ml</b>"
@@ -113,7 +113,7 @@ if page == "Rekomendasi Makanan":
             """, unsafe_allow_html=True
         )
 
-        st.subheader("🚫 Makanan yang Sebaiknya Dihindari:")
+        st.subheader("❌💔 Makanan yang Sebaiknya Dihindari:")
         total_avoid_grams = sum(avoid_foods.values())
         avoid_html = "".join([f"- {food}: <b>{gram} gram</b><br>" for food, gram in avoid_foods.items()])
         avoid_html += f"<br><b>Total konsumsi yang perlu dibatasi: {total_avoid_grams} gram/ml</b>"
