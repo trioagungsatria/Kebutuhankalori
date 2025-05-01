@@ -16,9 +16,12 @@ if page == "Rekomendasi Makanan":
     activity_level = st.selectbox("Tingkat aktivitas fisik Anda", ["Rendah", "Sedang", "Tinggi"])
 
     # Fungsi rekomendasi
-    def get_food_recommendations(age, gender, activity_level):
+    def get_food_recommendations(age, gender, activity_level, weight):
         recommended = {}
         to_avoid = {}
+
+        # Faktor penyesuaian berdasarkan berat badan (dibandingkan dengan 60 kg)
+        adjustment_factor = weight / 60.0
 
         if age < 18:
             recommended.update({
@@ -67,11 +70,15 @@ if page == "Rekomendasi Makanan":
                 "Lemak jenuh": 70
             })
 
+        # Sesuaikan semua porsi yang direkomendasikan berdasarkan berat badan
+        for food in recommended:
+            recommended[food] = int(recommended[food] * adjustment_factor)
+
         return recommended, to_avoid
 
     # Tombol tampilkan
     if st.button("Tampilkan Rekomendasi"):
-        good_foods, avoid_foods = get_food_recommendations(age, gender, activity_level)
+        good_foods, avoid_foods = get_food_recommendations(age, gender, activity_level, weight)
 
         st.subheader(f"✅ Makanan yang Direkomendasikan (Total: {len(good_foods)} jenis):")
         total_recommended_grams = 0
@@ -118,6 +125,7 @@ elif page == "Tentang Aplikasi":
 
     💡 Dibuat dengan Streamlit oleh [Tim Anda]
     """)
+
 
 
     
