@@ -71,9 +71,11 @@ if page == "Rekomendasi Makanan":
         return recommended, to_avoid
 
     # Tampilkan rekomendasi saat tombol ditekan
-      if st.button("Tampilkan Rekomendasi"):
+    # Tampilkan rekomendasi saat tombol ditekan
+    if st.button("Tampilkan Rekomendasi"):
         good_foods, avoid_foods = get_food_recommendations(age, gender, activity_level)
 
+        # Kotak untuk makanan direkomendasikan
         st.markdown("""
         <div style="background-color: #f0f2f6; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
         """, unsafe_allow_html=True)
@@ -85,8 +87,10 @@ if page == "Rekomendasi Makanan":
             total_recommended_grams += gram
         st.markdown(f"**Total konsumsi yang disarankan: {total_recommended_grams} gram/ml**")
 
+        st.markdown("</div>", unsafe_allow_html=True)
+
+        # Kotak untuk makanan yang perlu dihindari
         st.markdown("""
-        </div>
         <div style="background-color: #fff0f0; padding: 20px; border-radius: 10px;">
         """, unsafe_allow_html=True)
 
@@ -98,6 +102,7 @@ if page == "Rekomendasi Makanan":
         st.markdown(f"**Total konsumsi yang perlu dibatasi: {total_avoid_grams} gram/ml**")
 
         st.markdown("</div>", unsafe_allow_html=True)
+
 
 # Slide: Tentang Aplikasi
 elif page == "Tentang Aplikasi":
