@@ -9,8 +9,14 @@ page = st.sidebar.selectbox("Pilih Halaman", ["Rekomendasi Makanan", "Tentang Ap
 if page == "Rekomendasi Makanan":
     st.title("Rekomendasi Makanan Berdasarkan Aktivitas & Usia")
 
-    # Input
-    age = st.number_input("Masukkan umur Anda (tahun)", min_value=1, max_value=100)
+    # Dua kolom input untuk umur
+    col1, col2 = st.columns(2)
+    with col1:
+        age = st.number_input("Umur Anda (tahun)", min_value=1, max_value=100)
+    with col2:
+        other_age = st.number_input("Umur Anggota Keluarga (opsional)", min_value=1, max_value=100)
+
+    # Input tambahan
     gender = st.selectbox("Pilih jenis kelamin", ["Pria", "Wanita"])
     activity_level = st.selectbox("Tingkat aktivitas fisik Anda", ["Rendah", "Sedang", "Tinggi"])
 
@@ -106,7 +112,7 @@ if page == "Rekomendasi Makanan":
             unsafe_allow_html=True
         )
 
-# Halaman Tentang
+# Halaman Tentang Aplikasi
 elif page == "Tentang Aplikasi":
     st.title("Tentang Aplikasi")
     st.markdown("""
