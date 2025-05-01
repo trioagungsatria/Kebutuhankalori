@@ -77,25 +77,25 @@ if page == "Rekomendasi Makanan":
 
     # Input: Umur
     st.markdown("#### 🧓 Umur Anda")
-    st.markdown('<div style="background-color: rgba(0, 102, 204, 0.2); padding:10px; border-radius:10px;">', unsafe_allow_html=True)
+    st.markdown('<div style="background-color: rgba(0, 102, 204, 0.2); padding:20px; border-radius:10px;">', unsafe_allow_html=True)
     age = st.number_input("Masukkan umur Anda (tahun)", min_value=1, max_value=100, key="age")
     st.markdown("</div>", unsafe_allow_html=True)
 
     # Input: Berat Badan
     st.markdown("#### ⚖️ Berat Badan Anda")
-    st.markdown('<div style="background-color: rgba(0, 102, 204, 0.2); padding:10px; border-radius:10px;">', unsafe_allow_html=True)
+    st.markdown('<div style="background-color: rgba(0, 102, 204, 0.2); padding:20px; border-radius:10px;">', unsafe_allow_html=True)
     weight = st.number_input("Masukkan berat badan Anda (kg)", min_value=1.0, max_value=200.0, step=0.1, key="weight")
     st.markdown("</div>", unsafe_allow_html=True)
 
     # Input: Jenis Kelamin
     st.markdown("#### 🚻 Jenis Kelamin")
-    st.markdown('<div style="background-color: rgba(0, 102, 204, 0.2); padding:10px; border-radius:10px;">', unsafe_allow_html=True)
+    st.markdown('<div style="background-color: rgba(0, 102, 204, 0.2); padding:20px; border-radius:10px;">', unsafe_allow_html=True)
     gender = st.selectbox("Pilih jenis kelamin", ["Pria", "Wanita"], key="gender")
     st.markdown("</div>", unsafe_allow_html=True)
 
     # Input: Aktivitas Fisik
     st.markdown("#### 🏃‍♂️ Tingkat Aktivitas Fisik")
-    st.markdown('<div style="background-color: rgba(0, 102, 204, 0.2); padding:10px; border-radius:10px;">', unsafe_allow_html=True)
+    st.markdown('<div style="background-color: rgba(0, 102, 204, 0.2); padding:20px; border-radius:10px;">', unsafe_allow_html=True)
     activity_level = st.selectbox("Tingkat aktivitas fisik Anda", ["Rendah", "Sedang", "Tinggi"], key="activity")
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -140,6 +140,7 @@ elif page == "Tentang Aplikasi":
 
     💡 Dibuat dengan Streamlit oleh [Tim Anda]
     """)
+
 
 
 
