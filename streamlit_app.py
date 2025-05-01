@@ -110,7 +110,11 @@ if st.button("Tampilkan Rekomendasi"):
         unsafe_allow_html=True
     )
 
-    )
+    )File "/mount/src/kebutuhankalori/streamlit_app.py", line 113
+)
+^
+SyntaxError: unmatched ')'
+
 
 
 # Slide: Tentang Aplikasi
