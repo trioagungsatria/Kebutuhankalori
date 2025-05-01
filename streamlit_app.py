@@ -82,33 +82,26 @@ if st.button("Tampilkan Rekomendasi"):
         recommended_text += f"- {food}: <b>{gram} gram</b><br>"
         total_recommended_grams += gram
     recommended_text += f"<br><b>Total konsumsi yang disarankan: {total_recommended_grams} gram/ml</b>"
+st.markdown(
+    f"""
+    <div style="background-color: rgba(179, 0, 0, 0.6); padding: 15px; border-radius: 10px; color: white;">
+        {recommended_text}
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-    st.markdown(
-        f"""
-        <div style="background-color: #b30000; padding: 15px; border-radius: 10px; color: white;">
-            {recommended_text}
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+...
 
-    # Makanan yang dihindari
-    st.subheader(f"🚫 Makanan yang Sebaiknya Dihindari (Total: {len(avoid_foods)} jenis):")
-    total_avoid_grams = 0
-    avoid_text = ""
-    for food, gram in avoid_foods.items():
-        avoid_text += f"- {food}: <b>{gram} gram</b><br>"
-        total_avoid_grams += gram
-    avoid_text += f"<br><b>Total konsumsi yang perlu dibatasi: {total_avoid_grams} gram/ml</b>"
+st.markdown(
+    f"""
+    <div style="background-color: rgba(204, 0, 0, 0.6); padding: 15px; border-radius: 10px; color: white;">
+        {avoid_text}
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-    st.markdown(
-        f"""
-        <div style="background-color: #cc0000; padding: 15px; border-radius: 10px; color: white;">
-            {avoid_text}
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
 
 
 
