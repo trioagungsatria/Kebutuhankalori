@@ -5,7 +5,7 @@ st.set_page_config(page_title="Rekomendasi Makanan", page_icon="🍧", layout="c
 # Sidebar
 page = st.sidebar.selectbox("Pilih Halaman", ["Rekomendasi Makanan", "Tentang Aplikasi"])
 
-# Halaman Rekomendasi Makanan
+# Halaman Rekomendasi
 if page == "Rekomendasi Makanan":
     st.title("Rekomendasi Makanan Berdasarkan Aktivitas & Usia")
 
@@ -20,8 +20,7 @@ if page == "Rekomendasi Makanan":
         recommended = {}
         to_avoid = {}
 
-        # Faktor penyesuaian berdasarkan berat badan (dibandingkan dengan 60 kg)
-        adjustment_factor = weight / 60.0
+        adjustment_factor = weight / 60.0  # 60 kg sebagai patokan
 
         if age < 18:
             recommended.update({
@@ -70,13 +69,17 @@ if page == "Rekomendasi Makanan":
                 "Lemak jenuh": 70
             })
 
-        # Sesuaikan semua porsi yang direkomendasikan berdasarkan berat badan
+        # Penyesuaian berdasarkan berat badan
         for food in recommended:
             recommended[food] = int(recommended[food] * adjustment_factor)
 
+        for food in to_avoid:
+            adjusted = to_avoid[food] * adjustment_factor
+            max_limit = to_avoid[food] * 1.3  # Batas maksimal naik 30%
+            to_avoid[food] = int(min(adjusted, max_limit))
+
         return recommended, to_avoid
 
-    # Tombol tampilkan
     if st.button("Tampilkan Rekomendasi"):
         good_foods, avoid_foods = get_food_recommendations(age, gender, activity_level, weight)
 
@@ -90,7 +93,7 @@ if page == "Rekomendasi Makanan":
 
         st.markdown(
             f"""
-            <div style="background-color: rgba(179, 0, 0, 0.4); padding: 15px; border-radius: 10px; color: white;">
+            <div style="background-color: rgba(200, 0, 0, 0.3); padding: 15px; border-radius: 10px; color: white;">
                 {recommended_text}
             </div>
             """,
@@ -107,24 +110,25 @@ if page == "Rekomendasi Makanan":
 
         st.markdown(
             f"""
-            <div style="background-color: rgba(204, 0, 0, 0.4); padding: 15px; border-radius: 10px; color: white;">
+            <div style="background-color: rgba(180, 0, 0, 0.3); padding: 15px; border-radius: 10px; color: white;">
                 {avoid_text}
             </div>
             """,
             unsafe_allow_html=True
         )
 
-# Halaman Tentang Aplikasi
+# Halaman Tentang
 elif page == "Tentang Aplikasi":
     st.title("Tentang Aplikasi")
     st.markdown("""
     Aplikasi **Rekomendasi Makanan Berdasarkan Aktivitas & Usia** dibuat untuk memberikan panduan sederhana mengenai pola makan sehat berdasarkan kondisi individu.
 
-    - Menggunakan data usia dan aktivitas untuk menentukan saran gizi
-    - Rekomendasi bersifat umum dan bukan pengganti nasihat medis
+    - Berdasarkan data umur, berat badan, dan aktivitas fisik
+    - Rekomendasi bersifat umum dan bukan pengganti nasihat medis profesional
 
     💡 Dibuat dengan Streamlit oleh [Tim Anda]
     """)
+
 
 
 
