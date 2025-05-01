@@ -9,14 +9,9 @@ page = st.sidebar.selectbox("Pilih Halaman", ["Rekomendasi Makanan", "Tentang Ap
 if page == "Rekomendasi Makanan":
     st.title("Rekomendasi Makanan Berdasarkan Aktivitas & Usia")
 
-    # Dua kolom input untuk umur
-    col1, col2 = st.columns(2)
-    with col1:
-        age = st.number_input("Umur Anda (tahun)", min_value=1, max_value=100)
-    with col2:
-        other_age = st.number_input("Umur Anggota Keluarga (opsional)", min_value=1, max_value=100)
-
-    # Input tambahan
+    # Input pengguna
+    age = st.number_input("Umur Anda (tahun)", min_value=1, max_value=100)
+    weight = st.number_input("Berat Badan Anda (kg)", min_value=1.0, max_value=200.0, step=0.1)
     gender = st.selectbox("Pilih jenis kelamin", ["Pria", "Wanita"])
     activity_level = st.selectbox("Tingkat aktivitas fisik Anda", ["Rendah", "Sedang", "Tinggi"])
 
@@ -88,7 +83,7 @@ if page == "Rekomendasi Makanan":
 
         st.markdown(
             f"""
-            <div style="background-color: rgba(179, 0, 0, 0.5); padding: 15px; border-radius: 10px; color: white;">
+            <div style="background-color: rgba(179, 0, 0, 0.4); padding: 15px; border-radius: 10px; color: white;">
                 {recommended_text}
             </div>
             """,
@@ -105,7 +100,7 @@ if page == "Rekomendasi Makanan":
 
         st.markdown(
             f"""
-            <div style="background-color: rgba(204, 0, 0, 0.5); padding: 15px; border-radius: 10px; color: white;">
+            <div style="background-color: rgba(204, 0, 0, 0.4); padding: 15px; border-radius: 10px; color: white;">
                 {avoid_text}
             </div>
             """,
@@ -123,6 +118,7 @@ elif page == "Tentang Aplikasi":
 
     💡 Dibuat dengan Streamlit oleh [Tim Anda]
     """)
+
 
     
 
