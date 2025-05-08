@@ -1,9 +1,14 @@
 import streamlit as st
+import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Rekomendasi Makanan", page_icon="🍧", layout="centered")
 
 # Sidebar Navigasi
-page = st.sidebar.selectbox("Pilih Halaman", ["Rekomendasi Makanan", "Efek Konsumsi Makanan", "Tentang Aplikasi"])
+page = st.sidebar.selectbox("Pilih Halaman", [
+    "Rekomendasi Makanan",
+    "Efek Konsumsi Makanan",
+    "Tentang Aplikasi"
+])
 
 # Fungsi rekomendasi makanan
 def get_food_recommendations(age, gender, activity_level, weight):
@@ -59,8 +64,10 @@ def get_food_recommendations(age, gender, activity_level, weight):
             "Lemak jenuh": 70
         })
 
+    # Penyesuaian berat badan
     for food in recommended:
         recommended[food] = int(recommended[food] * adjustment_factor)
+
     for food in to_avoid:
         adjusted = to_avoid[food] * adjustment_factor
         to_avoid[food] = int(min(adjusted, to_avoid[food] * 1.3))
@@ -73,25 +80,22 @@ if page == "Rekomendasi Makanan":
 
     st.markdown("### Masukkan Data Anda")
 
+    # Kolom Input dengan Background Biru
     with st.container():
         st.markdown('<div style="background-color: rgba(0, 102, 204, 0.7); padding:30px; border-radius:10px;">', unsafe_allow_html=True)
 
-        st.markdown("#### 🧓 Umur Anda")
         age = st.number_input("Masukkan umur Anda (tahun)", min_value=1, max_value=100, key="age")
-
-        st.markdown("#### ⚖️ Berat Badan Anda")
         weight = st.number_input("Masukkan berat badan Anda (kg)", min_value=1.0, max_value=200.0, step=0.1, key="weight")
-
-        st.markdown("#### 🚻 Jenis Kelamin")
         gender = st.selectbox("Pilih jenis kelamin", ["Pria", "Wanita"], key="gender")
-
-        st.markdown("#### 🏃‍♂️ Tingkat Aktivitas Fisik")
         activity_level = st.selectbox("Tingkat aktivitas fisik Anda", ["Rendah", "Sedang", "Tinggi"], key="activity")
 
         st.markdown("</div>", unsafe_allow_html=True)
 
     if st.button("Tampilkan Rekomendasi"):
         good_foods, avoid_foods = get_food_recommendations(age, gender, activity_level, weight)
+
+        st.session_state.good_foods = good_foods
+        st.session_state.avoid_foods = avoid_foods
 
         st.subheader("✔❤ Makanan yang Direkomendasikan:")
         total_recommended_grams = sum(good_foods.values())
@@ -120,25 +124,51 @@ if page == "Rekomendasi Makanan":
             unsafe_allow_html=True
         )
 
-# Halaman Efek Konsumsi Makanan
+# Halaman Efek Konsumsi
 elif page == "Efek Konsumsi Makanan":
-    st.title("Dampak Konsumsi Makanan Tidak Sehat")
+    st.title("Efek Konsumsi Makanan Tidak Direkomendasikan")
 
-    st.markdown("""
-    ### ✅ Efek Baik Jika Menghindari Makanan yang Tidak Direkomendasikan:
-    - Menurunkan risiko obesitas
-    - Mengurangi tekanan darah dan kadar kolesterol
-    - Meningkatkan energi dan kebugaran harian
-    - Meningkatkan kualitas tidur dan suasana hati
-    - Menurunkan risiko penyakit jantung dan diabetes tipe 2
+    avoid_foods = st.session_state.get("avoid_foods", {})
 
-    ### ⚠️ Efek Buruk Jika Tidak Menghindari Makanan yang Tidak Direkomendasikan:
-    - Kenaikan berat badan tidak terkendali
-    - Risiko gangguan metabolik meningkat
-    - Penurunan fungsi jantung dan pembuluh darah
-    - Gangguan pencernaan dan peradangan usus
-    - Peningkatan risiko penyakit kronis dalam jangka panjang
-    """)
+    if avoid_foods:
+        st.markdown("### Dampak Menghindari vs. Mengonsumsi")
+
+        efek_baik = {
+            "Makanan cepat saji": "Menurunkan risiko obesitas",
+            "Minuman bersoda": "Menjaga kestabilan gula darah",
+            "Makanan tinggi gula": "Mencegah diabetes",
+            "Gorengan": "Menurunkan kolesterol",
+            "Makanan olahan": "Mengurangi risiko kanker",
+            "Terlalu banyak kafein": "Tidur lebih nyenyak",
+            "Makanan asin": "Tekanan darah lebih stabil",
+            "Daging merah berlebihan": "Menurunkan risiko jantung",
+            "Gula tinggi": "Mencegah resistensi insulin",
+            "Camilan manis": "Menjaga berat badan ideal",
+            "Minuman manis": "Mencegah lonjakan gula darah",
+            "Lemak jenuh": "Menjaga pembuluh darah"
+        }
+
+        # Efek visual
+        efek_list = []
+        for food in avoid_foods:
+            efek = efek_baik.get(food, "Menjaga kesehatan secara umum")
+            efek_list.append((food, efek))
+
+        for makanan, efek in efek_list:
+            st.markdown(f"**{makanan}**\n- 📈 Jika dikonsumsi: Risiko meningkat\n- 📉 Jika dihindari: {efek}")
+
+        # Chart sederhana
+        st.markdown("### Visualisasi Risiko Konsumsi")
+        labels = [food for food in avoid_foods.keys()]
+        values = [avoid_foods[food] for food in avoid_foods.keys()]
+
+        fig, ax = plt.subplots()
+        ax.barh(labels, values, color="crimson")
+        ax.set_xlabel("Potensi Risiko (gram/ml berlebih)")
+        ax.set_title("Tingkat Risiko dari Makanan Tidak Direkomendasikan")
+        st.pyplot(fig)
+    else:
+        st.info("Silakan kunjungi halaman 'Rekomendasi Makanan' terlebih dahulu.")
 
 # Halaman Tentang
 elif page == "Tentang Aplikasi":
