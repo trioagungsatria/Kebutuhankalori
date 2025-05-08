@@ -187,6 +187,7 @@ elif page == "Tentang Aplikasi":
 
 
 
+
     
 
 
