@@ -6,49 +6,12 @@ st.set_page_config(page_title="Rekomendasi Makanan", page_icon="🍧", layout="c
 page = st.sidebar.selectbox("Pilih Halaman", ["Rekomendasi Makanan", "Efek Konsumsi Makanan", "Tentang Aplikasi"])
 
 # Fungsi rekomendasi makanan
-
 def get_food_recommendations(age, gender, activity_level, weight):
     recommended = {}
     to_avoid = {}
-    risiko = []
 
     adjustment_factor = weight / 60.0  # berat badan standar
 
-    # Risiko tambahan berdasarkan profil pengguna
-    if weight > 80:
-        risiko.append("Obesitas")
-        to_avoid.update({
-            "Makanan tinggi kalori (gorengan, keju, krimer)": 150,
-            "Minuman manis dan bersoda": 250,
-        })
-        recommended.update({
-            "Sayuran tinggi serat": 200,
-            "Sumber protein rendah lemak (ikan, tahu)": 200,
-        })
-
-    if age > 50:
-        risiko.append("Penyakit jantung / tekanan darah tinggi")
-        to_avoid.update({
-            "Makanan asin (keripik, makanan instan)": 100,
-            "Lemak jenuh (mentega, santan)": 80,
-        })
-        recommended.update({
-            "Ikan berlemak (omega-3)": 150,
-            "Oatmeal dan gandum utuh": 180,
-        })
-
-    if activity_level == "Rendah":
-        risiko.append("Metabolisme lambat / risiko diabetes")
-        to_avoid.update({
-            "Camilan manis": 100,
-            "Tepung putih": 150,
-        })
-        recommended.update({
-            "Sayur kukus & rebus": 200,
-            "Karbohidrat kompleks (beras merah, ubi)": 150,
-        })
-
-    # Rekomendasi berdasarkan umur
     if age < 18:
         recommended.update({
             "Susu rendah lemak": 250,
@@ -89,19 +52,25 @@ def get_food_recommendations(age, gender, activity_level, weight):
             "Pisang": 120,
             "Air mineral yang cukup": 2000
         })
+    elif activity_level == "Rendah":
+        to_avoid.update({
+            "Camilan manis": 100,
+            "Minuman manis": 250,
+            "Lemak jenuh": 70
+        })
 
-    # Penyesuaian berat badan
     for food in recommended:
         recommended[food] = int(recommended[food] * adjustment_factor)
     for food in to_avoid:
         adjusted = to_avoid[food] * adjustment_factor
         to_avoid[food] = int(min(adjusted, to_avoid[food] * 1.3))
 
-    return recommended, to_avoid, risiko
+    return recommended, to_avoid
 
 # Halaman Rekomendasi
 if page == "Rekomendasi Makanan":
     st.title("Rekomendasi Makanan Berdasarkan Aktivitas & Usia")
+
     st.markdown("### Masukkan Data Anda")
 
     with st.container():
@@ -122,12 +91,7 @@ if page == "Rekomendasi Makanan":
         st.markdown("</div>", unsafe_allow_html=True)
 
     if st.button("Tampilkan Rekomendasi"):
-        good_foods, avoid_foods, risiko = get_food_recommendations(age, gender, activity_level, weight)
-
-        if risiko:
-            st.warning("⚠️ Risiko Kesehatan Berdasarkan Profil Anda:")
-            for r in risiko:
-                st.markdown(f"- {r}")
+        good_foods, avoid_foods = get_food_recommendations(age, gender, activity_level, weight)
 
         st.subheader("✔❤ Makanan yang Direkomendasikan:")
         total_recommended_grams = sum(good_foods.values())
@@ -156,11 +120,19 @@ if page == "Rekomendasi Makanan":
             unsafe_allow_html=True
         )
 
+        st.subheader("⚠️ Risiko Jika Tidak Menghindari Makanan Tersebut:")
+        st.markdown("""
+        - Kenaikan berat badan yang tidak terkendali
+        - Risiko penyakit jantung dan tekanan darah tinggi
+        - Gangguan metabolik dan pencernaan
+        - Penurunan energi dan produktivitas harian
+        """)
+
 # Halaman Efek Konsumsi Makanan
 elif page == "Efek Konsumsi Makanan":
     st.title("Dampak Konsumsi Makanan Tidak Sehat")
 
-    st.markdown("""
+    st.markdown(""" 
     ### ✅ Efek Baik Jika Menghindari Makanan yang Tidak Direkomendasikan:
     - Menurunkan risiko obesitas
     - Mengurangi tekanan darah dan kadar kolesterol
@@ -176,7 +148,7 @@ elif page == "Efek Konsumsi Makanan":
     - Peningkatan risiko penyakit kronis dalam jangka panjang
     """)
 
-# Halaman Tentang Aplikasi
+# Halaman Tentang
 elif page == "Tentang Aplikasi":
     st.title("Tentang Aplikasi")
     st.markdown("""
