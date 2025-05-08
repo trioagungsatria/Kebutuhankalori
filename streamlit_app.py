@@ -120,22 +120,28 @@ if page == "Rekomendasi Makanan":
             unsafe_allow_html=True
         )
 
+        # Efek Baik Jika Mengonsumsi Makanan yang Direkomendasikan
         st.subheader("⚖️ Efek Baik Jika Mengonsumsi Makanan yang Direkomendasikan:")
         st.markdown("""
-        - Meningkatkan daya tahan tubuh dan kebugaran fisik
-        - Meningkatkan metabolisme tubuh dan energi harian
-        - Menurunkan risiko penyakit jantung dan diabetes
-        - Menjaga kesehatan kulit, rambut, dan gigi
+        <div style="background-color: rgba(0, 204, 0, 0.3); padding: 15px; border-radius: 10px; color: white;">
+        - Meningkatkan daya tahan tubuh dan kebugaran fisik<br>
+        - Meningkatkan metabolisme tubuh dan energi harian<br>
+        - Menurunkan risiko penyakit jantung dan diabetes<br>
+        - Menjaga kesehatan kulit, rambut, dan gigi<br>
         - Meningkatkan kualitas tidur dan suasana hati
-        """)
+        </div>
+        """, unsafe_allow_html=True)
 
+        # Risiko Jika Tidak Menghindari Makanan Tersebut
         st.subheader("⚠️ Risiko Jika Tidak Menghindari Makanan Tersebut:")
         st.markdown("""
-        - Kenaikan berat badan yang tidak terkendali
-        - Risiko penyakit jantung dan tekanan darah tinggi
-        - Gangguan metabolik dan pencernaan
+        <div style="background-color: rgba(255, 0, 0, 0.4); padding: 15px; border-radius: 10px; color: white;">
+        - Kenaikan berat badan yang tidak terkendali<br>
+        - Risiko penyakit jantung dan tekanan darah tinggi<br>
+        - Gangguan metabolik dan pencernaan<br>
         - Penurunan energi dan produktivitas harian
-        """)
+        </div>
+        """, unsafe_allow_html=True)
 
 # Halaman Efek Konsumsi Makanan
 elif page == "Efek Konsumsi Makanan":
