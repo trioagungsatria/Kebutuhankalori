@@ -1,146 +1,157 @@
 import streamlit as st
-import altair as alt
-import pandas as pd
 
-def main():
-    # Konfigurasi halaman Streamlit
-    st.set_page_config(page_title="Aplikasi Rekomendasi Makanan", layout="wide")
-    st.title("🍽️ Aplikasi Rekomendasi Makanan Sehat")
-    
-    # Sidebar untuk navigasi antar halaman
-    st.sidebar.title("Menu")
-    page = st.sidebar.radio("Pilih Halaman:", ("Rekomendasi Makanan", "Efek Konsumsi Makanan"))
-    
-    if page == "Rekomendasi Makanan":
-        halaman_rekomendasi()
-    elif page == "Efek Konsumsi Makanan":
-        halaman_efek()
+st.set_page_config(page_title="Rekomendasi Makanan", page_icon="🍧", layout="centered")
 
-def halaman_rekomendasi():
-    st.header("Rekomendasi Makanan Berdasarkan Profil Pengguna")
-    st.write("""
-        Masukkan data diri untuk mendapatkan rekomendasi makanan yang sesuai 
-        dengan usia, berat badan, jenis kelamin, dan tingkat aktivitas Anda. 
-        Aplikasi ini akan menampilkan daftar makanan yang direkomendasikan 
-        serta yang sebaiknya dihindari.
-    """)
-    
-    # Form input data pengguna
-    usia = st.number_input("Umur (tahun)", min_value=1, max_value=120, value=25)
-    berat = st.number_input("Berat Badan (kg)", min_value=10, max_value=200, value=70)
-    jenis_kelamin = st.selectbox("Jenis Kelamin", ("Laki-laki", "Perempuan"))
-    aktivitas = st.selectbox("Tingkat Aktivitas", ("Rendah", "Sedang", "Tinggi"))
-    
-    if st.button("Lihat Rekomendasi"):
-        # Klasifikasi kategori berat badan berdasarkan gender
-        if jenis_kelamin == "Laki-laki":
-            if berat < 60:
-                kategori_bb = "Underweight"
-            elif berat > 75:
-                kategori_bb = "Overweight"
-            else:
-                kategori_bb = "Normal"
-        else:  # Perempuan
-            if berat < 50:
-                kategori_bb = "Underweight"
-            elif berat > 65:
-                kategori_bb = "Overweight"
-            else:
-                kategori_bb = "Normal"
-        
-        # Daftar awal makanan rekomendasi dan yang tidak direkomendasikan
-        rekomendasi = ["Sayuran hijau", "Buah-buahan", "Protein tanpa lemak", "Air putih"]
-        tidak_rekomendasi = ["Makanan cepat saji", "Minuman bersoda", "Gorengan", "Makanan tinggi gula"]
-        
-        # Tambahkan rekomendasi khusus berdasarkan kategori berat badan
-        if kategori_bb == "Underweight":
-            rekomendasi += ["Kacang-kacangan", "Buah kering", "Susu tinggi kalori", "Ikan berlemak"]
-        elif kategori_bb == "Overweight":
-            rekomendasi += ["Sayuran berserat tinggi", "Oatmeal", "Kacang hijau", "Ikan panggang"]
-        else:  # Normal
-            rekomendasi += ["Nasi merah", "Ayam tanpa kulit", "Telur rebus", "Yogurt"]
-        
-        # Tambahkan rekomendasi khusus berdasarkan tingkat aktivitas
-        if aktivitas == "Tinggi":
-            rekomendasi += ["Karbohidrat kompleks (roti gandum, ubi)", "Protein untuk pemulihan otot (dada ayam, ikan)"]
-        elif aktivitas == "Rendah":
-            rekomendasi += ["Sayuran rendah karbohidrat", "Lemak sehat (alpukat, kacang-kacangan)"]
-        else:  # Sedang
-            rekomendasi += ["Karbohidrat sehat (beras merah, buah)", "Protein sedang (ikan, tahu)"]
-        
-        # Hapus duplikat pada daftar rekomendasi
-        rekomendasi = list(dict.fromkeys(rekomendasi))
-        
-        # Tampilkan daftar makanan rekomendasi
-        st.subheader("Makanan yang Direkomendasikan")
-        for makanan in rekomendasi:
-            st.write("- " + makanan)
-        
-        # Tampilkan daftar makanan yang tidak direkomendasikan
-        st.subheader("Makanan yang Tidak Direkomendasikan")
-        for makanan in tidak_rekomendasi:
-            st.write("- " + makanan)
-        
-        # Grafik komposisi makronutrien harian (horizontal bar)
-        st.subheader("Grafik Komposisi Makronutrien Harian (Estimasi)")
-        if aktivitas == "Rendah":
-            persen = {"Karbohidrat": 45, "Protein": 30, "Lemak": 25}
-        elif aktivitas == "Sedang":
-            persen = {"Karbohidrat": 50, "Protein": 30, "Lemak": 20}
-        else:  # Tinggi
-            persen = {"Karbohidrat": 60, "Protein": 25, "Lemak": 15}
-        
-        df_makro = pd.DataFrame({
-            "Nutrisi": list(persen.keys()),
-            "Persen": list(persen.values())
+# Sidebar Navigasi
+page = st.sidebar.selectbox("Pilih Halaman", ["Rekomendasi Makanan", "Efek Konsumsi Makanan", "Tentang Aplikasi"])
+
+# Fungsi rekomendasi makanan
+def get_food_recommendations(age, gender, activity_level, weight):
+    recommended = {}
+    to_avoid = {}
+
+    adjustment_factor = weight / 60.0  # berat badan standar
+
+    if age < 18:
+        recommended.update({
+            "Susu rendah lemak": 250,
+            "Sayuran hijau": 100,
+            "Protein hewani dan nabati": 150
         })
-        bar_chart = alt.Chart(df_makro).mark_bar(color='teal').encode(
-            x=alt.X('Persen:Q', title='Persentase (%)'),
-            y=alt.Y('Nutrisi:N', sort='-x', title='Jenis Nutrisi')
-        ).properties(width=600)
-        st.altair_chart(bar_chart, use_container_width=True)
+        to_avoid.update({
+            "Makanan cepat saji": 200,
+            "Minuman bersoda": 330,
+            "Makanan tinggi gula": 100
+        })
+    elif 18 <= age <= 50:
+        recommended.update({
+            "Karbohidrat kompleks (nasi merah, oatmeal)": 200,
+            "Sayuran & buah segar": 300,
+            "Protein (telur, ayam, tahu)": 200
+        })
+        to_avoid.update({
+            "Gorengan": 150,
+            "Makanan olahan": 180,
+            "Terlalu banyak kafein": 200
+        })
+    else:
+        recommended.update({
+            "Makanan tinggi kalsium": 250,
+            "Ikan berlemak (salmon, sarden)": 150,
+            "Sayur berserat tinggi": 200
+        })
+        to_avoid.update({
+            "Makanan asin": 150,
+            "Daging merah berlebihan": 200,
+            "Gula tinggi": 100
+        })
 
-def halaman_efek():
-    st.header("Efek Konsumsi Makanan")
-    st.write("""
-        Halaman ini menjelaskan **efek positif** dari menghindari makanan yang tidak direkomendasikan
-        serta **efek negatif** jika makanan-makanan tersebut dikonsumsi secara rutin.
-    """)
-    
-    # Efek positif dari menghindari makanan buruk
-    st.subheader("Efek Baik Menghindari Makanan Tidak Direkomendasikan")
-    st.write("""
-    - Menurunkan risiko penyakit jantung karena asupan lemak jenuh dan kolesterol berkurang.
-    - Menjaga berat badan ideal sehingga terhindar dari obesitas.
-    - Mengontrol kadar gula darah lebih baik dan menurunkan risiko diabetes.
-    - Meningkatkan kesehatan pencernaan karena lebih banyak asupan serat.
-    """)
-    
-    # Efek buruk jika makanan tidak direkomendasikan dikonsumsi
-    st.subheader("Efek Buruk Jika Makanan Tidak Direkomendasikan Dikonsumsi")
-    st.write("""
-    - Meningkatkan risiko kenaikan berat badan dan obesitas.
-    - Meningkatkan risiko penyakit jantung karena kolesterol dan lemak jenuh tinggi.
-    - Meningkatkan risiko diabetes tipe 2 akibat konsumsi gula berlebihan.
-    - Menyebabkan kerusakan gigi dan masalah kesehatan mulut karena makanan manis.
-    """)
-    
-    # Visualisasi risiko penyakit (diagram batang horizontal)
-    data_risiko = pd.DataFrame({
-        'Penyakit': ['Jantung', 'Diabetes', 'Obesitas', 'Karies Gigi'],
-        'Risiko': [8, 9, 7, 6]
-    })
-    bar_chart2 = alt.Chart(data_risiko).mark_bar(color='salmon').encode(
-        x=alt.X('Risiko:Q', title='Level Risiko (1-10)'),
-        y=alt.Y('Penyakit:N', sort='-x', title='Jenis Penyakit')
-    ).properties(
-        title='Estimasi Risiko Penyakit Jika Makanan Tidak Direkomendasikan Dikonsumsi',
-        width=600
-    )
-    st.altair_chart(bar_chart2, use_container_width=True)
+    if activity_level == "Tinggi":
+        recommended.update({
+            "Karbohidrat sehat (ubi, roti gandum)": 250,
+            "Pisang": 120,
+            "Air mineral yang cukup": 2000
+        })
+    elif activity_level == "Rendah":
+        to_avoid.update({
+            "Camilan manis": 100,
+            "Minuman manis": 250,
+            "Lemak jenuh": 70
+        })
 
-if __name__ == "__main__":
-    main()
+    for food in recommended:
+        recommended[food] = int(recommended[food] * adjustment_factor)
+    for food in to_avoid:
+        adjusted = to_avoid[food] * adjustment_factor
+        to_avoid[food] = int(min(adjusted, to_avoid[food] * 1.3))
+
+    return recommended, to_avoid
+
+# Halaman Rekomendasi
+if page == "Rekomendasi Makanan":
+    st.title("Rekomendasi Makanan Berdasarkan Aktivitas & Usia")
+
+    st.markdown("### Masukkan Data Anda")
+
+    with st.container():
+        st.markdown('<div style="background-color: rgba(0, 102, 204, 0.7); padding:30px; border-radius:10px;">', unsafe_allow_html=True)
+
+        st.markdown("#### 🧓 Umur Anda")
+        age = st.number_input("Masukkan umur Anda (tahun)", min_value=1, max_value=100, key="age")
+
+        st.markdown("#### ⚖️ Berat Badan Anda")
+        weight = st.number_input("Masukkan berat badan Anda (kg)", min_value=1.0, max_value=200.0, step=0.1, key="weight")
+
+        st.markdown("#### 🚻 Jenis Kelamin")
+        gender = st.selectbox("Pilih jenis kelamin", ["Pria", "Wanita"], key="gender")
+
+        st.markdown("#### 🏃‍♂️ Tingkat Aktivitas Fisik")
+        activity_level = st.selectbox("Tingkat aktivitas fisik Anda", ["Rendah", "Sedang", "Tinggi"], key="activity")
+
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    if st.button("Tampilkan Rekomendasi"):
+        good_foods, avoid_foods = get_food_recommendations(age, gender, activity_level, weight)
+
+        st.subheader("✔❤ Makanan yang Direkomendasikan:")
+        total_recommended_grams = sum(good_foods.values())
+        recommended_html = "".join([f"- {food}: <b>{gram} gram</b><br>" for food, gram in good_foods.items()])
+        recommended_html += f"<br><b>Total konsumsi yang disarankan: {total_recommended_grams} gram/ml</b>"
+
+        st.markdown(
+            f"""
+            <div style="background-color: rgba(255, 0, 0, 0.3); padding: 15px; border-radius: 10px; color: white;">
+                {recommended_html}
+            </div>
+            """, unsafe_allow_html=True
+        )
+
+        st.subheader("❌💔 Makanan yang Sebaiknya Dihindari:")
+        total_avoid_grams = sum(avoid_foods.values())
+        avoid_html = "".join([f"- {food}: <b>{gram} gram</b><br>" for food, gram in avoid_foods.items()])
+        avoid_html += f"<br><b>Total konsumsi yang perlu dibatasi: {total_avoid_grams} gram/ml</b>"
+
+        st.markdown(
+            f"""
+            <div style="background-color: rgba(180, 0, 0, 0.4); padding: 15px; border-radius: 10px; color: white;">
+                {avoid_html}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+# Halaman Efek Konsumsi Makanan
+elif page == "Efek Konsumsi Makanan":
+    st.title("Dampak Konsumsi Makanan Tidak Sehat")
+
+    st.markdown("""
+    ### ✅ Efek Baik Jika Menghindari Makanan yang Tidak Direkomendasikan:
+    - Menurunkan risiko obesitas
+    - Mengurangi tekanan darah dan kadar kolesterol
+    - Meningkatkan energi dan kebugaran harian
+    - Meningkatkan kualitas tidur dan suasana hati
+    - Menurunkan risiko penyakit jantung dan diabetes tipe 2
+
+    ### ⚠️ Efek Buruk Jika Tidak Menghindari Makanan yang Tidak Direkomendasikan:
+    - Kenaikan berat badan tidak terkendali
+    - Risiko gangguan metabolik meningkat
+    - Penurunan fungsi jantung dan pembuluh darah
+    - Gangguan pencernaan dan peradangan usus
+    - Peningkatan risiko penyakit kronis dalam jangka panjang
+    """)
+
+# Halaman Tentang
+elif page == "Tentang Aplikasi":
+    st.title("Tentang Aplikasi")
+    st.markdown("""
+    Aplikasi **Rekomendasi Makanan Berdasarkan Aktivitas & Usia** dibuat untuk memberikan panduan sederhana mengenai pola makan sehat berdasarkan kondisi individu.
+
+    - Berdasarkan data umur, berat badan, dan aktivitas fisik
+    - Rekomendasi bersifat umum dan bukan pengganti nasihat medis profesional
+
+    💡 Dibuat dengan Streamlit oleh [Tim Anda]
+    """)
+
 
 
 
