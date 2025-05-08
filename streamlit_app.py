@@ -3,7 +3,7 @@ import streamlit as st
 st.set_page_config(page_title="Rekomendasi Makanan", page_icon="🍧", layout="centered")
 
 # Sidebar Navigasi
-page = st.sidebar.selectbox("Pilih Halaman", ["Rekomendasi Makanan", "Efek Konsumsi Makanan", "Tentang Aplikasi"])
+page = st.sidebar.selectbox("Pilih Halaman", ["Rekomendasi Makanan", "Tentang Aplikasi"])
 
 # Fungsi rekomendasi makanan
 def get_food_recommendations(age, gender, activity_level, weight):
@@ -142,26 +142,6 @@ if page == "Rekomendasi Makanan":
         - Penurunan energi dan produktivitas harian
         </div>
         """, unsafe_allow_html=True)
-
-# Halaman Efek Konsumsi Makanan
-elif page == "Efek Konsumsi Makanan":
-    st.title("Dampak Konsumsi Makanan Tidak Sehat")
-
-    st.markdown(""" 
-    ### ✅ Efek Baik Jika Menghindari Makanan yang Tidak Direkomendasikan:
-    - Menurunkan risiko obesitas
-    - Mengurangi tekanan darah dan kadar kolesterol
-    - Meningkatkan energi dan kebugaran harian
-    - Meningkatkan kualitas tidur dan suasana hati
-    - Menurunkan risiko penyakit jantung dan diabetes tipe 2
-
-    ### ⚠️ Efek Buruk Jika Tidak Menghindari Makanan yang Tidak Direkomendasikan:
-    - Kenaikan berat badan tidak terkendali
-    - Risiko gangguan metabolik meningkat
-    - Penurunan fungsi jantung dan pembuluh darah
-    - Gangguan pencernaan dan peradangan usus
-    - Peningkatan risiko penyakit kronis dalam jangka panjang
-    """)
 
 # Halaman Tentang
 elif page == "Tentang Aplikasi":
