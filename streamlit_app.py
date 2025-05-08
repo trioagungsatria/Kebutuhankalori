@@ -120,28 +120,37 @@ if page == "Rekomendasi Makanan":
             unsafe_allow_html=True
         )
 
-        # Efek Baik Jika Mengonsumsi Makanan yang Direkomendasikan
+        # Efek Baik Jika Mengonsumsi Makanan yang Direkomendasikan berdasarkan makanan yang direkomendasikan
         st.subheader("⚖️ Efek Baik Jika Mengonsumsi Makanan yang Direkomendasikan:")
-        st.markdown("""
-        <div style="background-color: rgba(0, 204, 0, 0.3); padding: 15px; border-radius: 10px; color: white;">
-        - Meningkatkan daya tahan tubuh dan kebugaran fisik<br>
-        - Meningkatkan metabolisme tubuh dan energi harian<br>
-        - Menurunkan risiko penyakit jantung dan diabetes<br>
-        - Menjaga kesehatan kulit, rambut, dan gigi<br>
-        - Meningkatkan kualitas tidur dan suasana hati
-        </div>
-        """, unsafe_allow_html=True)
+        
+        effects_good = []
+        if "Sayuran hijau" in good_foods:
+            effects_good.append("- Meningkatkan pencernaan dan kesehatan jantung")
+        if "Karbohidrat kompleks (nasi merah, oatmeal)" in good_foods:
+            effects_good.append("- Menjaga kadar gula darah dan memberikan energi stabil")
+        if "Makanan tinggi kalsium" in good_foods:
+            effects_good.append("- Meningkatkan kesehatan tulang dan mencegah osteoporosis")
+        
+        st.markdown("<div style='background-color: rgba(0, 204, 0, 0.3); padding: 15px; border-radius: 10px; color: white;'>", unsafe_allow_html=True)
+        for effect in effects_good:
+            st.markdown(f"{effect}<br>")
+        st.markdown("</div>", unsafe_allow_html=True)
 
-        # Risiko Jika Tidak Menghindari Makanan Tersebut
+        # Risiko Jika Tidak Menghindari Makanan Tersebut berdasarkan makanan yang harus dihindari
         st.subheader("⚠️ Risiko Jika Tidak Menghindari Makanan Tersebut:")
-        st.markdown("""
-        <div style="background-color: rgba(0, 204, 0, 0.3); padding: 15px; border-radius: 10px; color: white;">
-        - Kenaikan berat badan yang tidak terkendali<br>
-        - Risiko penyakit jantung dan tekanan darah tinggi<br>
-        - Gangguan metabolik dan pencernaan<br>
-        - Penurunan energi dan produktivitas harian
-        </div>
-        """, unsafe_allow_html=True)
+        
+        risks = []
+        if "Makanan cepat saji" in avoid_foods:
+            risks.append("- Risiko kenaikan berat badan yang cepat dan masalah pencernaan")
+        if "Gorengan" in avoid_foods:
+            risks.append("- Menyebabkan peningkatan kolesterol dan tekanan darah tinggi")
+        if "Daging merah berlebihan" in avoid_foods:
+            risks.append("- Menyebabkan masalah jantung dan meningkatkan risiko kanker")
+        
+        st.markdown("<div style='background-color: rgba(180, 0, 0, 0.4); padding: 15px; border-radius: 10px; color: white;'>", unsafe_allow_html=True)
+        for risk in risks:
+            st.markdown(f"{risk}<br>")
+        st.markdown("</div>", unsafe_allow_html=True)
 
 # Halaman Tentang
 elif page == "Tentang Aplikasi":
@@ -154,6 +163,8 @@ elif page == "Tentang Aplikasi":
 
     💡 Dibuat dengan Streamlit oleh [Tim Anda]
     """)
+
+
 
 
 
