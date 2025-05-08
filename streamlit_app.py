@@ -3,7 +3,7 @@ import streamlit as st
 st.set_page_config(page_title="Rekomendasi Makanan", page_icon="🍧", layout="centered")
 
 # Sidebar Navigasi
-page = st.sidebar.selectbox("Pilih Halaman", ["Rekomendasi Makanan", "Tentang Aplikasi"])
+page = st.sidebar.selectbox("Pilih Halaman", ["Rekomendasi Makanan", "Efek Konsumsi Makanan", "Tentang Aplikasi"])
 
 # Fungsi rekomendasi makanan
 def get_food_recommendations(age, gender, activity_level, weight):
@@ -59,10 +59,8 @@ def get_food_recommendations(age, gender, activity_level, weight):
             "Lemak jenuh": 70
         })
 
-    # Penyesuaian berat badan
     for food in recommended:
         recommended[food] = int(recommended[food] * adjustment_factor)
-
     for food in to_avoid:
         adjusted = to_avoid[food] * adjustment_factor
         to_avoid[food] = int(min(adjusted, to_avoid[food] * 1.3))
@@ -75,27 +73,22 @@ if page == "Rekomendasi Makanan":
 
     st.markdown("### Masukkan Data Anda")
 
-    # Kolom Input dengan Background Biru
     with st.container():
-        st.markdown('<div style="background-color: rgba(0, 102, 204, 0.7); padding:30px; border-radius:10px;">', unsafe_allow_html=True)  # background biru
+        st.markdown('<div style="background-color: rgba(0, 102, 204, 0.7); padding:30px; border-radius:10px;">', unsafe_allow_html=True)
 
-        # Input: Umur
         st.markdown("#### 🧓 Umur Anda")
         age = st.number_input("Masukkan umur Anda (tahun)", min_value=1, max_value=100, key="age")
 
-        # Input: Berat Badan
         st.markdown("#### ⚖️ Berat Badan Anda")
         weight = st.number_input("Masukkan berat badan Anda (kg)", min_value=1.0, max_value=200.0, step=0.1, key="weight")
 
-        # Input: Jenis Kelamin
         st.markdown("#### 🚻 Jenis Kelamin")
         gender = st.selectbox("Pilih jenis kelamin", ["Pria", "Wanita"], key="gender")
 
-        # Input: Aktivitas Fisik
         st.markdown("#### 🏃‍♂️ Tingkat Aktivitas Fisik")
         activity_level = st.selectbox("Tingkat aktivitas fisik Anda", ["Rendah", "Sedang", "Tinggi"], key="activity")
 
-        st.markdown("</div>", unsafe_allow_html=True)  # tutup background biru
+        st.markdown("</div>", unsafe_allow_html=True)
 
     if st.button("Tampilkan Rekomendasi"):
         good_foods, avoid_foods = get_food_recommendations(age, gender, activity_level, weight)
@@ -127,7 +120,27 @@ if page == "Rekomendasi Makanan":
             unsafe_allow_html=True
         )
 
-# Halaman Tentang Aplikasi
+# Halaman Efek Konsumsi Makanan
+elif page == "Efek Konsumsi Makanan":
+    st.title("Dampak Konsumsi Makanan Tidak Sehat")
+
+    st.markdown("""
+    ### ✅ Efek Baik Jika Menghindari Makanan yang Tidak Direkomendasikan:
+    - Menurunkan risiko obesitas
+    - Mengurangi tekanan darah dan kadar kolesterol
+    - Meningkatkan energi dan kebugaran harian
+    - Meningkatkan kualitas tidur dan suasana hati
+    - Menurunkan risiko penyakit jantung dan diabetes tipe 2
+
+    ### ⚠️ Efek Buruk Jika Tidak Menghindari Makanan yang Tidak Direkomendasikan:
+    - Kenaikan berat badan tidak terkendali
+    - Risiko gangguan metabolik meningkat
+    - Penurunan fungsi jantung dan pembuluh darah
+    - Gangguan pencernaan dan peradangan usus
+    - Peningkatan risiko penyakit kronis dalam jangka panjang
+    """)
+
+# Halaman Tentang
 elif page == "Tentang Aplikasi":
     st.title("Tentang Aplikasi")
     st.markdown("""
@@ -138,6 +151,7 @@ elif page == "Tentang Aplikasi":
 
     💡 Dibuat dengan Streamlit oleh [Tim Anda]
     """)
+
 
 
 
