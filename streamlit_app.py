@@ -120,6 +120,15 @@ if page == "Rekomendasi Makanan":
             unsafe_allow_html=True
         )
 
+        st.subheader("⚖️ Efek Baik Jika Mengonsumsi Makanan yang Direkomendasikan:")
+        st.markdown("""
+        - Meningkatkan daya tahan tubuh dan kebugaran fisik
+        - Meningkatkan metabolisme tubuh dan energi harian
+        - Menurunkan risiko penyakit jantung dan diabetes
+        - Menjaga kesehatan kulit, rambut, dan gigi
+        - Meningkatkan kualitas tidur dan suasana hati
+        """)
+
         st.subheader("⚠️ Risiko Jika Tidak Menghindari Makanan Tersebut:")
         st.markdown("""
         - Kenaikan berat badan yang tidak terkendali
@@ -159,6 +168,7 @@ elif page == "Tentang Aplikasi":
 
     💡 Dibuat dengan Streamlit oleh [Tim Anda]
     """)
+
 
 
 
