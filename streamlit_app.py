@@ -4,11 +4,7 @@ import matplotlib.pyplot as plt
 st.set_page_config(page_title="Rekomendasi Makanan", page_icon="🍧", layout="centered")
 
 # Sidebar Navigasi
-page = st.sidebar.selectbox("Pilih Halaman", [
-    "Rekomendasi Makanan",
-    "Efek Konsumsi Makanan",
-    "Tentang Aplikasi"
-])
+page = st.sidebar.selectbox("Pilih Halaman", ["Rekomendasi Makanan", "Efek Konsumsi Makanan", "Tentang Aplikasi"])
 
 # Fungsi rekomendasi makanan
 def get_food_recommendations(age, gender, activity_level, weight):
@@ -64,29 +60,31 @@ def get_food_recommendations(age, gender, activity_level, weight):
             "Lemak jenuh": 70
         })
 
-    # Penyesuaian berat badan
     for food in recommended:
         recommended[food] = int(recommended[food] * adjustment_factor)
-
     for food in to_avoid:
         adjusted = to_avoid[food] * adjustment_factor
         to_avoid[food] = int(min(adjusted, to_avoid[food] * 1.3))
 
     return recommended, to_avoid
 
-# Halaman Rekomendasi
 if page == "Rekomendasi Makanan":
     st.title("Rekomendasi Makanan Berdasarkan Aktivitas & Usia")
-
     st.markdown("### Masukkan Data Anda")
 
-    # Kolom Input dengan Background Biru
     with st.container():
         st.markdown('<div style="background-color: rgba(0, 102, 204, 0.7); padding:30px; border-radius:10px;">', unsafe_allow_html=True)
 
+        st.markdown("#### 🤿 Umur Anda")
         age = st.number_input("Masukkan umur Anda (tahun)", min_value=1, max_value=100, key="age")
+
+        st.markdown("#### ⚖️ Berat Badan Anda")
         weight = st.number_input("Masukkan berat badan Anda (kg)", min_value=1.0, max_value=200.0, step=0.1, key="weight")
+
+        st.markdown("#### 🛋 Jenis Kelamin")
         gender = st.selectbox("Pilih jenis kelamin", ["Pria", "Wanita"], key="gender")
+
+        st.markdown("#### 🏃‍♂️ Tingkat Aktivitas Fisik")
         activity_level = st.selectbox("Tingkat aktivitas fisik Anda", ["Rendah", "Sedang", "Tinggi"], key="activity")
 
         st.markdown("</div>", unsafe_allow_html=True)
@@ -94,83 +92,52 @@ if page == "Rekomendasi Makanan":
     if st.button("Tampilkan Rekomendasi"):
         good_foods, avoid_foods = get_food_recommendations(age, gender, activity_level, weight)
 
-        st.session_state.good_foods = good_foods
-        st.session_state.avoid_foods = avoid_foods
-
         st.subheader("✔❤ Makanan yang Direkomendasikan:")
         total_recommended_grams = sum(good_foods.values())
         recommended_html = "".join([f"- {food}: <b>{gram} gram</b><br>" for food, gram in good_foods.items()])
         recommended_html += f"<br><b>Total konsumsi yang disarankan: {total_recommended_grams} gram/ml</b>"
 
-        st.markdown(
-            f"""
+        st.markdown(f"""
             <div style="background-color: rgba(255, 0, 0, 0.3); padding: 15px; border-radius: 10px; color: white;">
                 {recommended_html}
             </div>
-            """, unsafe_allow_html=True
-        )
+        """, unsafe_allow_html=True)
 
         st.subheader("❌💔 Makanan yang Sebaiknya Dihindari:")
         total_avoid_grams = sum(avoid_foods.values())
         avoid_html = "".join([f"- {food}: <b>{gram} gram</b><br>" for food, gram in avoid_foods.items()])
         avoid_html += f"<br><b>Total konsumsi yang perlu dibatasi: {total_avoid_grams} gram/ml</b>"
 
-        st.markdown(
-            f"""
+        st.markdown(f"""
             <div style="background-color: rgba(180, 0, 0, 0.4); padding: 15px; border-radius: 10px; color: white;">
                 {avoid_html}
             </div>
-            """,
-            unsafe_allow_html=True
-        )
+        """, unsafe_allow_html=True)
 
-# Halaman Efek Konsumsi
+        st.session_state['avoid_foods'] = avoid_foods
+
 elif page == "Efek Konsumsi Makanan":
-    st.title("Efek Konsumsi Makanan Tidak Direkomendasikan")
+    st.title("Efek Konsumsi Makanan yang Tidak Direkomendasikan")
+    avoid_foods = st.session_state.get('avoid_foods', {})
 
-    avoid_foods = st.session_state.get("avoid_foods", {})
-
-    if avoid_foods:
-        st.markdown("### Dampak Menghindari vs. Mengonsumsi")
-
-        efek_baik = {
-            "Makanan cepat saji": "Menurunkan risiko obesitas",
-            "Minuman bersoda": "Menjaga kestabilan gula darah",
-            "Makanan tinggi gula": "Mencegah diabetes",
-            "Gorengan": "Menurunkan kolesterol",
-            "Makanan olahan": "Mengurangi risiko kanker",
-            "Terlalu banyak kafein": "Tidur lebih nyenyak",
-            "Makanan asin": "Tekanan darah lebih stabil",
-            "Daging merah berlebihan": "Menurunkan risiko jantung",
-            "Gula tinggi": "Mencegah resistensi insulin",
-            "Camilan manis": "Menjaga berat badan ideal",
-            "Minuman manis": "Mencegah lonjakan gula darah",
-            "Lemak jenuh": "Menjaga pembuluh darah"
-        }
-
-        # Efek visual
-        efek_list = []
-        for food in avoid_foods:
-            efek = efek_baik.get(food, "Menjaga kesehatan secara umum")
-            efek_list.append((food, efek))
-
-        for makanan, efek in efek_list:
-            st.markdown(f"**{makanan}**\n- 📈 Jika dikonsumsi: Risiko meningkat\n- 📉 Jika dihindari: {efek}")
-
-        # Chart sederhana
-        st.markdown("### Visualisasi Risiko Konsumsi")
-        labels = [food for food in avoid_foods.keys()]
-        values = [avoid_foods[food] for food in avoid_foods.keys()]
-
-        fig, ax = plt.subplots()
-        ax.barh(labels, values, color="crimson")
-        ax.set_xlabel("Potensi Risiko (gram/ml berlebih)")
-        ax.set_title("Tingkat Risiko dari Makanan Tidak Direkomendasikan")
-        st.pyplot(fig)
+    if not avoid_foods:
+        st.warning("Silakan isi data dan tampilkan rekomendasi terlebih dahulu di halaman utama.")
     else:
-        st.info("Silakan kunjungi halaman 'Rekomendasi Makanan' terlebih dahulu.")
+        st.subheader("Efek Buruk Jika Tidak Menghindari:")
+        for food in avoid_foods:
+            st.markdown(f"- **{food}**: Berisiko menyebabkan gangguan kesehatan jika dikonsumsi berlebihan.")
 
-# Halaman Tentang
+        st.subheader("Efek Baik Jika Menghindari:")
+        for food in avoid_foods:
+            st.markdown(f"- **{food}**: Menjaga kesehatan tubuh dan mencegah penyakit kronis.")
+
+        labels = list(avoid_foods.keys())
+        values = list(avoid_foods.values())
+        fig, ax = plt.subplots()
+        ax.pie(values, labels=labels, autopct='%1.1f%%')
+        ax.set_title("Proporsi Makanan yang Harus Dihindari")
+        st.pyplot(fig)
+
 elif page == "Tentang Aplikasi":
     st.title("Tentang Aplikasi")
     st.markdown("""
@@ -181,6 +148,7 @@ elif page == "Tentang Aplikasi":
 
     💡 Dibuat dengan Streamlit oleh [Tim Anda]
     """)
+
 
 
 
