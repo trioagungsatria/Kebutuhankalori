@@ -135,7 +135,7 @@ if page == "Rekomendasi Makanan":
         # Risiko Jika Tidak Menghindari Makanan Tersebut
         st.subheader("⚠️ Risiko Jika Tidak Menghindari Makanan Tersebut:")
         st.markdown("""
-        <div style="background-color: rgba(255, 0, 0, 0.4); padding: 15px; border-radius: 10px; color: white;">
+        <div style="background-color: rgba(204, 204, 0, 0.3); padding: 15px; border-radius: 10px; color: white;">
         - Kenaikan berat badan yang tidak terkendali<br>
         - Risiko penyakit jantung dan tekanan darah tinggi<br>
         - Gangguan metabolik dan pencernaan<br>
