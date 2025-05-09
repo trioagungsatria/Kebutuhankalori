@@ -182,5 +182,3 @@ elif page == "Tentang Aplikasi":
 
     💡 Dibuat dengan Streamlit oleh [Tim Anda]
     """)
-
-
