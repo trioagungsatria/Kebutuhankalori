@@ -67,7 +67,7 @@ def get_food_recommendations(age, gender, activity_level, weight):
 
     return recommended, to_avoid
 
-# Fungsi menampilkan efek baik dan risiko berdasarkan hasil
+# Fungsi menampilkan efek baik dan risiko
 def generate_effects(recommended_foods, avoided_foods):
     efek_baik = []
     risiko = []
@@ -94,11 +94,18 @@ def generate_effects(recommended_foods, avoided_foods):
 
 # Halaman Rekomendasi
 if page == "Rekomendasi Makanan":
-    st.title("Rekomendasi Makanan Berdasarkan Aktivitas & Usia")
+    st.markdown(
+        """
+        <div style="background-color: rgba(0, 102, 204, 0.7); padding:20px; border-radius:10px; color:white; text-align:center;">
+            <h2>Rekomendasi Makanan Berdasarkan Aktivitas & Usia</h2>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
     st.markdown("### Masukkan Data Anda")
 
     with st.container():
-        st.markdown('<div style="background-color: rgba(0, 102, 204, 0.7); padding:30px; border-radius:10px;">', unsafe_allow_html=True)
         st.markdown("#### 🧓 Umur Anda")
         age = st.number_input("Masukkan umur Anda (tahun)", min_value=1, max_value=100, key="age")
         st.markdown("#### ⚖️ Berat Badan Anda")
@@ -107,7 +114,6 @@ if page == "Rekomendasi Makanan":
         gender = st.selectbox("Pilih jenis kelamin", ["Pria", "Wanita"], key="gender")
         st.markdown("#### 🏃‍♂️ Tingkat Aktivitas Fisik")
         activity_level = st.selectbox("Tingkat aktivitas fisik Anda", ["Rendah", "Sedang", "Tinggi"], key="activity")
-        st.markdown("</div>", unsafe_allow_html=True)
 
     if st.button("Tampilkan Rekomendasi"):
         good_foods, avoid_foods = get_food_recommendations(age, gender, activity_level, weight)
@@ -176,30 +182,5 @@ elif page == "Tentang Aplikasi":
 
     💡 Dibuat dengan Streamlit oleh [Tim Anda]
     """)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
 
 
